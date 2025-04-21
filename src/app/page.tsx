@@ -1,103 +1,193 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  Heading,
+  Text,
+  Button,
+  Flex,
+  Badge,
+} from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import Layout from "./components/Layout";
+import Link from "next/link";
+
+interface GameScores {
+  clicker: number;
+  reactionTime: number;
+  // 추가 미니게임 점수들...
+}
+
+interface UserData {
+  level: number;
+  scores: GameScores;
+  avatar?: string; // ✅ 이 줄 추가
+  unlockedAvatars?: string[];
+}
+
+export default function HomePage() {
+  const router = useRouter();
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        // 새 사용자 초기화
+        const initialData: UserData = {
+          level: 1,
+          scores: {
+            clicker: 0,
+            reactionTime: 0,
+          },
+          avatar: "default", // 장착한 아바타 ID
+          unlockedAvatars: ["default"],
+        };
+        await setDoc(doc(db, "users", user.uid), initialData);
+        setUserData(initialData);
+      } else {
+        setUserData(userDoc.data() as UserData);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
+  const calculateLevel = (scores: GameScores) => {
+    return Math.floor((scores.clicker + scores.reactionTime) / 100) + 1;
+  };
+
+  const games = [
+    {
+      id: "clicker",
+      name: "클리커 게임",
+      description: "빠르게 클릭하여 점수를 얻으세요!",
+      path: "/games/clicker",
+    },
+    {
+      id: "reactionTime",
+      name: "반응속도 게임",
+      description: "신호가 바뀔 때 빠르게 반응하세요!",
+      path: "/games/reaction",
+    },
+    // 추가 미니게임들...
+  ];
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      router.push("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  if (!userData) {
+    return null;
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <Layout>
+      <Box>
+        <Flex direction="column" gap={6}>
+          <Box
+            bg="white"
+            p={6}
+            rounded="2xl"
+            border="1px solid"
+            borderColor="gray.100"
+          >
+            <Flex justify="space-between" align="center" mb={4}>
+              <Flex direction="column" gap={1}>
+                <Text fontSize="sm" color="gray.500">
+                  현재 레벨
+                </Text>
+                <Flex align="center" gap={2}>
+                  <Heading size="lg">{userData.level}</Heading>
+                  <Badge colorScheme="blue" fontSize="sm">
+                    Lv.{userData.level}
+                  </Badge>
+                </Flex>
+              </Flex>
+              <Box bg="gray.50" p={3} rounded="xl" textAlign="center">
+                <Text fontSize="sm" color="gray.500">
+                  다음 레벨까지
+                </Text>
+                <Text fontSize="lg" fontWeight="bold" color="blue.500">
+                  {calculateLevel(userData.scores) * 100 -
+                    (userData.scores.clicker + userData.scores.reactionTime)}
+                  점
+                </Text>
+              </Box>
+            </Flex>
+          </Box>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <Grid templateColumns="repeat(auto-fit, minmax(300px, 1fr))" gap={6}>
+            {games.map((game) => (
+              <Box
+                key={game.id}
+                bg="white"
+                p={6}
+                rounded="2xl"
+                border="1px solid"
+                borderColor="gray.100"
+                _hover={{
+                  transform: "translateY(-2px)",
+                  transition: "all 0.2s",
+                }}
+              >
+                <Flex direction="column" gap={4}>
+                  <Flex justify="space-between" align="center">
+                    <Heading size="md">{game.name}</Heading>
+                    <Badge colorScheme="green" fontSize="sm">
+                      <Text fontSize="sm" color="gray.600">
+                        {(() => {
+                          const rawScore =
+                            userData.scores[game.id as keyof GameScores] ?? 0;
+                          const displayScore =
+                            game.id === "reactionTime"
+                              ? 1000 - rawScore
+                              : rawScore;
+
+                          return `최고 ${displayScore}점`;
+                        })()}
+                      </Text>
+                    </Badge>
+                  </Flex>
+                  <Text color="gray.600">{game.description}</Text>
+                  <Button
+                    colorScheme="blue"
+                    size="lg"
+                    onClick={() => router.push(game.path)}
+                    _hover={{ bg: "blue.600" }}
+                  >
+                    게임 시작
+                  </Button>
+                </Flex>
+              </Box>
+            ))}
+          </Grid>
+        </Flex>
+      </Box>
+
+      <Box mt={8} className="flex flex-col items-center space-y-4">
+        <button
+          onClick={handleLogout}
+          className="px-6 py-3 text-lg font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          로그아웃
+        </button>
+      </Box>
+    </Layout>
   );
 }
