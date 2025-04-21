@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "../../firebase";
+import { auth } from "../../src/firebase";
 import {
   collection,
   query,
@@ -13,7 +13,7 @@ import {
   serverTimestamp,
   where,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../src/firebase";
 import Link from "next/link";
 
 export default function GamePage() {
