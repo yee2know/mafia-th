@@ -7,7 +7,8 @@ import { auth, db } from "../../../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Layout from "../../components/Layout";
 import { updateScores } from "../../firebase/updateScores";
-
+import { checkAndUnlockAvatars } from "@/app/avatar/unlock";
+import { UserData } from "@/constants/interface";
 type GameState = "waiting" | "ready" | "clicking" | "finished";
 
 export default function ReactionGame() {
@@ -78,17 +79,23 @@ export default function ReactionGame() {
             const userRef = doc(db, "users", auth.currentUser.uid);
             const userDoc = await getDoc(userRef);
             const userData = userDoc.data();
-
+            const totalscore =
+              1000 -
+              reactionTime +
+              (userData?.scores?.clicker || 0) +
+              (userData?.scores?.killjennet || 0) +
+              (userData?.scores?.taehyung_enhance || 0);
             await updateDoc(userRef, {
               "scores.reactionTime": reactionTime,
-              level:
-                Math.floor(
-                  (1000 - reactionTime + (userData?.scores?.clicker || 0)) / 100
-                ) + 1,
+              level: Math.floor(totalscore / 100) + 1,
+              score: totalscore,
             });
 
             await updateScores();
-
+            await checkAndUnlockAvatars(
+              auth.currentUser.uid,
+              userData as UserData
+            );
             toast({
               title: "새로운 최고 기록!",
               status: "success",

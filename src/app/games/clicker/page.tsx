@@ -7,6 +7,8 @@ import { auth, db } from "../../../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Layout from "../../components/Layout";
 import { updateScores } from "../../firebase/updateScores";
+import { checkAndUnlockAvatars } from "@/app/avatar/unlock";
+import { UserData } from "@/constants/interface";
 export default function ClickerGame() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
@@ -69,14 +71,19 @@ export default function ClickerGame() {
         const userDoc = await getDoc(userRef);
         const userData = userDoc.data();
 
+        const totalscore =
+          score +
+          (1000 - userData?.scores?.reactionTime || 0) +
+          (userData?.scores?.killjennet || 0) +
+          (userData?.scores?.taehyung_enhance || 0);
         await updateDoc(userRef, {
           "scores.clicker": score,
-          level:
-            Math.floor((score + (userData?.scores?.reactionTime || 0)) / 100) +
-            1,
+          level: Math.floor(totalscore / 100) + 1,
+          score: totalscore,
         });
         await updateScores();
         setHighScore(score);
+        await checkAndUnlockAvatars(auth.currentUser.uid, userData as UserData);
         toast({
           title: "새로운 최고 점수!",
           status: "success",

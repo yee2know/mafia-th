@@ -1,5 +1,5 @@
 "use client";
-
+import { Tooltip } from "@chakra-ui/react";
 import {
   Box,
   Button,
@@ -68,42 +68,45 @@ export default function AvatarPage() {
           const isUnlocked =
             unlocked.includes(avatar.id) || level >= avatar.unlockLevel;
 
+          const can = isUnlocked;
+
           return (
-            <Box
-              key={avatar.id}
-              p={3}
-              borderWidth={2}
-              borderColor={
-                selectedAvatar === avatar.id ? "blue.400" : "gray.200"
-              }
-              borderRadius="lg"
-              textAlign="center"
-            >
-              <Image
-                src={avatar.imageUrl}
-                alt={avatar.name}
-                w="80px"
-                h="80px"
-                mx="auto"
-              />
-              <Text mt={2} fontSize="sm">
-                {avatar.name}
-              </Text>
-              {isUnlocked ? (
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  mt={2}
-                  onClick={() => handleSelect(avatar.id)}
-                >
-                  {selectedAvatar === avatar.id ? "장착됨" : "장착"}
-                </Button>
-              ) : (
-                <Text fontSize="xs" color="gray.500" mt={2}>
-                  {avatar.unlockLevel}레벨 필요
-                </Text>
-              )}
-            </Box>
+            <Tooltip label={avatar.conditionText} isDisabled={can}>
+              <Box
+                key={avatar.id}
+                p={3}
+                borderWidth={2}
+                borderColor={
+                  selectedAvatar === avatar.id ? "blue.400" : "gray.200"
+                }
+                rounded="lg"
+                textAlign="center"
+                filter={can ? "none" : "grayscale(100%)"}
+                cursor={can ? "pointer" : "not-allowed"}
+              >
+                <Image
+                  src={avatar.imageUrl}
+                  alt={avatar.name}
+                  w="80px"
+                  h="80px"
+                  mx="auto"
+                />
+                <Text mt={2}>{avatar.name}</Text>
+                {can ? (
+                  <Button
+                    size="sm"
+                    mt={2}
+                    onClick={() => handleSelect(avatar.id)}
+                  >
+                    {selectedAvatar === avatar.id ? "장착됨" : "장착"}
+                  </Button>
+                ) : (
+                  <Text fontSize="xs" color="gray.500" mt={2}>
+                    {avatar.conditionText}
+                  </Text>
+                )}
+              </Box>
+            </Tooltip>
           );
         })}
       </Grid>

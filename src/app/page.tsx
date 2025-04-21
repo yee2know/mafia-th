@@ -16,19 +16,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import Layout from "./components/Layout";
 import Link from "next/link";
-
-interface GameScores {
-  clicker: number;
-  reactionTime: number;
-  // 추가 미니게임 점수들...
-}
-
-interface UserData {
-  level: number;
-  scores: GameScores;
-  avatar?: string; // ✅ 이 줄 추가
-  unlockedAvatars?: string[];
-}
+import { UserData, GameScores } from "@/constants/interface";
+import { games } from "@/constants/games";
 
 export default function HomePage() {
   const router = useRouter();
@@ -46,12 +35,16 @@ export default function HomePage() {
         // 새 사용자 초기화
         const initialData: UserData = {
           level: 1,
+          score: 0,
           scores: {
             clicker: 0,
             reactionTime: 0,
+            killjennet: 0,
+            taehyung_enhance: 0,
           },
           avatar: "default", // 장착한 아바타 ID
           unlockedAvatars: ["default"],
+          userName: "Guest",
         };
         await setDoc(doc(db, "users", user.uid), initialData);
         setUserData(initialData);
@@ -64,24 +57,8 @@ export default function HomePage() {
   }, [router]);
 
   const calculateLevel = (scores: GameScores) => {
-    return Math.floor((scores.clicker + scores.reactionTime) / 100) + 1;
+    return Math.floor((scores.clicker + 1000 - scores.reactionTime) / 100) + 1;
   };
-
-  const games = [
-    {
-      id: "clicker",
-      name: "클리커 게임",
-      description: "빠르게 클릭하여 점수를 얻으세요!",
-      path: "/games/clicker",
-    },
-    {
-      id: "reactionTime",
-      name: "반응속도 게임",
-      description: "신호가 바뀔 때 빠르게 반응하세요!",
-      path: "/games/reaction",
-    },
-    // 추가 미니게임들...
-  ];
 
   const handleLogout = async () => {
     try {
@@ -125,7 +102,9 @@ export default function HomePage() {
                 </Text>
                 <Text fontSize="lg" fontWeight="bold" color="blue.500">
                   {calculateLevel(userData.scores) * 100 -
-                    (userData.scores.clicker + userData.scores.reactionTime)}
+                    (userData.scores.clicker +
+                      1000 -
+                      userData.scores.reactionTime)}
                   점
                 </Text>
               </Box>
