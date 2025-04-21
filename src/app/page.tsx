@@ -101,11 +101,7 @@ export default function HomePage() {
                   다음 레벨까지
                 </Text>
                 <Text fontSize="lg" fontWeight="bold" color="blue.500">
-                  {calculateLevel(userData.scores) * 100 -
-                    (userData.scores.clicker +
-                      1000 -
-                      userData.scores.reactionTime)}
-                  점
+                  {100 - (userData.score % 100)}점
                 </Text>
               </Box>
             </Flex>
