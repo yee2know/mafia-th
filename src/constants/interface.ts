@@ -13,5 +13,6 @@ export interface GameScores {
   killjennet: number;
   taehyung_enhance: number;
   brick: number;
+  timing: number;
   // 추가 미니게임 점수들...
 }

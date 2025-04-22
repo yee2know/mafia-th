@@ -145,7 +145,8 @@ export default function BrickBreakerGame() {
           (1000 - snap.data()?.scores?.reactionTime || 0) +
           (snap.data()?.scores?.clicker || 0) +
           (snap.data()?.scores?.killjennet || 0) +
-          (snap.data()?.scores?.taehyung_enhance || 0);
+          (snap.data()?.scores?.taehyung_enhance || 0) +
+          (snap.data()?.scores?.timing || 0);
         await updateDoc(ref, {
           "scores.brick": score,
           level: Math.floor(totalscore / 100) + 1,

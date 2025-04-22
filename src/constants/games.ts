@@ -32,4 +32,10 @@ export const games = [
     description: "벽돌대신 태형을 깨보세요!!",
     path: "/games/brick",
   },
+  {
+    id: "timing",
+    name: "타이밍 태형",
+    description: "타이밍을 맞춰 태형을 클릭하세요!",
+    path: "/games/timing",
+  },
 ];

@@ -35,11 +35,32 @@ export const avatarList = [
     conditionText: "레벨 50 이상",
   },
   {
+    id: "merong",
+    name: "메롱!!",
+    imageUrl: "/avatars/lv100.png",
+    unlockLevel: 100,
+    conditionText: "레벨 100 이상",
+  },
+  {
     id: "monster",
     name: "몬스터",
     imageUrl: "/avatars/monster.png",
     unlockLevel: 99,
     conditionText: "이벤트 보상",
+  },
+  {
+    id: "clicker",
+    name: "눌러줭",
+    imageUrl: "/avatars/clicker.png",
+    unlockLevel: 999,
+    conditionText: "클리커 1100점 이상",
+  },
+  {
+    id: "reaction",
+    name: "반응속도",
+    imageUrl: "/avatars/reaction.png",
+    unlockLevel: 999,
+    conditionText: "반응속도 100ms 이하",
   },
   {
     id: "killjennet",
@@ -61,6 +82,13 @@ export const avatarList = [
     imageUrl: "/avatars/brick.png",
     unlockLevel: 999,
     conditionText: "김태형 벽돌깨기 1000점 이상",
+  },
+  {
+    id: "timing",
+    name: "인생은 타이밍",
+    imageUrl: "/avatars/timing.png",
+    unlockLevel: 999,
+    conditionText: "태형 타이밍 1500점 이상",
   },
   {
     id: "special1",

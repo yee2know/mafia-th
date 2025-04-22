@@ -10,6 +10,7 @@ import {
   Image,
   Input,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import { auth, db } from "@/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -60,6 +61,9 @@ export default function ProfilePage() {
         <Text fontSize="2xl" fontWeight="bold">
           {userName}
         </Text>
+        <Link href="/editname">
+          <Button colorScheme="blue">이름 변경</Button>
+        </Link>
         <Text>레벨: {level}</Text>
         <Text>총 점수: {score}</Text>
 
@@ -69,7 +73,20 @@ export default function ProfilePage() {
           </Heading>
           {Object.entries(scores).map(([key, value]) => (
             <Text key={key}>
-              {key} : {String(value)}
+              {key === "taehyung_enhance"
+                ? "김태형 강화하기"
+                : key === "reactionTime"
+                ? "반응속도"
+                : key === "clicker"
+                ? "클리커"
+                : key === "killjennet"
+                ? "김태형 죽이기"
+                : key === "brick"
+                ? "태형깨기"
+                : key === "timing"
+                ? "태형 타이밍"
+                : key}{" "}
+              : {String(value)}
               {key === "reactionTime" ? "ms" : "점"}
             </Text>
           ))}

@@ -85,7 +85,8 @@ export default function ReactionGame() {
               (userData?.scores?.clicker || 0) +
               (userData?.scores?.killjennet || 0) +
               (userData?.scores?.taehyung_enhance || 0) +
-              (userData?.scores?.brick || 0);
+              (userData?.scores?.brick || 0) +
+              (userData?.scores?.timing || 0);
             await updateDoc(userRef, {
               "scores.reactionTime": reactionTime,
               level: Math.floor(totalscore / 100) + 1,

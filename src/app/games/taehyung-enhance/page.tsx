@@ -35,7 +35,8 @@ export default function TaehyungEnhanceGame() {
       (1000 - snap.data()?.scores?.reactionTime || 0) +
       (snap.data()?.scores?.clicker || 0) +
       (snap.data()?.scores?.killjennet || 0) +
-      (snap.data()?.scores?.brick || 0);
+      (snap.data()?.scores?.brick || 0) +
+      (snap.data()?.scores?.timing || 0);
     await updateDoc(userRef, {
       "scores.taehyung_enhance": newScore,
       level: Math.floor(totalscore / 100) + 1,

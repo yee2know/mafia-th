@@ -64,7 +64,7 @@ export default function ClickerGame() {
     setIsPlaying(false);
 
     if (!auth.currentUser) return;
-
+    setScore((prev) => prev * 3); // 점수 3배
     if (score > highScore) {
       try {
         const userRef = doc(db, "users", auth.currentUser.uid);
@@ -72,18 +72,19 @@ export default function ClickerGame() {
         const userData = userDoc.data();
 
         const totalscore =
-          score +
+          score * 3 +
           (1000 - userData?.scores?.reactionTime || 0) +
           (userData?.scores?.killjennet || 0) +
           (userData?.scores?.taehyung_enhance || 0) +
-          (userData?.scores?.brick || 0);
+          (userData?.scores?.brick || 0) +
+          (userData?.scores?.timing || 0);
         await updateDoc(userRef, {
-          "scores.clicker": score,
+          "scores.clicker": score * 3,
           level: Math.floor(totalscore / 100) + 1,
           score: totalscore,
         });
         //await updateScores();
-        setHighScore(score);
+        setHighScore(score * 3);
         await checkAndUnlockAvatars(auth.currentUser.uid, userData as UserData);
         toast({
           title: "새로운 최고 점수!",

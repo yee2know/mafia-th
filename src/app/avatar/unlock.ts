@@ -63,12 +63,28 @@ const unlockConditions = [
     condition: (user: UserData) => user.scores?.brick >= 1000,
   },
   {
+    id: "timing",
+    condition: (user: UserData) => user.scores?.timing >= 1500,
+  },
+  {
+    id: "clicker",
+    condition: (user: UserData) => user.scores?.clicker >= 1100,
+  },
+  {
+    id: "reaction",
+    condition: (user: UserData) => user.scores?.reactionTime <= 100,
+  },
+  {
     id: "lv30",
     condition: (user: UserData) => user.level >= 30,
   },
   {
     id: "gay",
     condition: (user: UserData) => user.level >= 50,
+  },
+  {
+    id: "merong",
+    condition: (user: UserData) => user.level >= 100,
   },
   {
     id: "monster",

@@ -43,6 +43,7 @@ export default function HomePage() {
             killjennet: 0,
             taehyung_enhance: 0,
             brick: 0,
+            timing: 0,
           },
           avatar: "default", // 장착한 아바타 ID
           unlockedAvatars: ["default"],

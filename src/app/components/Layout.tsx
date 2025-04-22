@@ -94,7 +94,7 @@ export default function Layout({ children }: LayoutProps) {
                   justifyContent="center"
                 >
                   <Text color="white" fontWeight="bold">
-                    R
+                    M
                   </Text>
                 </Box>
                 <Heading size="md" color="gray.900">

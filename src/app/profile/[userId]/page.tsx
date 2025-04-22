@@ -65,6 +65,8 @@ export default function PublicProfilePage() {
                 ? "김태형 죽이기"
                 : key === "brick"
                 ? "태형깨기"
+                : key === "timing"
+                ? "태형 타이밍"
                 : key}{" "}
               : {String(value)}
               {key === "reactionTime" ? "ms" : "점"}
