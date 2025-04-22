@@ -2,9 +2,11 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { UserData } from "@/constants/interface";
 import { avatarList } from "./avatar";
+
 export const checkAndUnlockAvatars = async (
   uid: string,
-  userData: UserData
+  userData: UserData,
+  toast?: ReturnType<typeof import("@chakra-ui/react").useToast>
 ) => {
   const unlocked = new Set(userData.unlockedAvatars ?? []);
   let updated = false;
@@ -27,12 +29,14 @@ export const checkAndUnlockAvatars = async (
     newlyUnlocked.forEach((id) => {
       const avatarName =
         avatarList.find((a) => a.id === id)?.name || "알 수 없음";
-      toast({
-        title: `${avatarName} 아바타 해금!`,
-        status: "success",
-        duration: 2500,
-        isClosable: true,
-      });
+      if (toast) {
+        toast({
+          title: `${avatarName} 아바타 해금! 새로고침하세요!`,
+          status: "success",
+          duration: 2500,
+          isClosable: true,
+        });
+      }
     });
   }
 };
@@ -52,7 +56,11 @@ const unlockConditions = [
   },
   {
     id: "enhance",
-    condition: (user: UserData) => user.scores?.taehyung_enhance >= 3000,
+    condition: (user: UserData) => user.scores?.taehyung_enhance >= 2999,
+  },
+  {
+    id: "brick",
+    condition: (user: UserData) => user.scores?.brick >= 1000,
   },
   {
     id: "lv30",
@@ -72,8 +80,7 @@ const unlockConditions = [
   },
   {
     id: "special2",
-    condition: (user: UserData) =>
-      (user.scores?.reactionTime ?? 0) <= 200 && user.level >= 100,
+    condition: (user: UserData) => user.level >= 9999,
   },
 ];
 function toast(arg0: {

@@ -109,7 +109,8 @@ export default function ReflexGame() {
       finalScore +
       (1000 - snap.data()?.scores?.reactionTime || 0) +
       (snap.data()?.scores?.clicker || 0) +
-      (snap.data()?.scores?.taehyung_enhance || 0);
+      (snap.data()?.scores?.taehyung_enhance || 0) +
+      (snap.data()?.scores?.brick || 0);
 
     await updateDoc(userRef, {
       [`scores.killjennet`]: finalScore,

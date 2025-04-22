@@ -56,7 +56,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   justifyContent="center"
                 >
                   <Text color="white" fontWeight="bold">
-                    R
+                    M
                   </Text>
                 </Box>
                 <Text fontSize="xl" fontWeight="bold">

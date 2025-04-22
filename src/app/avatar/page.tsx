@@ -9,10 +9,13 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { auth, db } from "@/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { avatarList } from "./avatar"; // 위에서 정의한 리스트
+import { checkAndUnlockAvatars } from "./unlock";
+import { UserData } from "@/constants/interface";
+import RefreshActionButton from "../components/refresh"; // 새로고침 버튼 컴포넌트
 
 export default function AvatarPage() {
   const toast = useToast();
@@ -58,6 +61,7 @@ export default function AvatarPage() {
       <Text fontSize="2xl" fontWeight="bold">
         아바타 선택
       </Text>
+      <RefreshActionButton />
       <Grid
         templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
         gap={4}
@@ -71,9 +75,12 @@ export default function AvatarPage() {
           const can = isUnlocked;
 
           return (
-            <Tooltip label={avatar.conditionText} isDisabled={can}>
+            <Tooltip
+              label={avatar.conditionText}
+              isDisabled={can}
+              key={avatar.id}
+            >
               <Box
-                key={avatar.id}
                 p={3}
                 borderWidth={2}
                 borderColor={

@@ -75,13 +75,14 @@ export default function ClickerGame() {
           score +
           (1000 - userData?.scores?.reactionTime || 0) +
           (userData?.scores?.killjennet || 0) +
-          (userData?.scores?.taehyung_enhance || 0);
+          (userData?.scores?.taehyung_enhance || 0) +
+          (userData?.scores?.brick || 0);
         await updateDoc(userRef, {
           "scores.clicker": score,
           level: Math.floor(totalscore / 100) + 1,
           score: totalscore,
         });
-        await updateScores();
+        //await updateScores();
         setHighScore(score);
         await checkAndUnlockAvatars(auth.currentUser.uid, userData as UserData);
         toast({

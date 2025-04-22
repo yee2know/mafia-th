@@ -36,11 +36,13 @@ export default function HomePage() {
         const initialData: UserData = {
           level: 1,
           score: 0,
+          bio: "자기소개를 적어주세요.",
           scores: {
             clicker: 0,
             reactionTime: 0,
             killjennet: 0,
             taehyung_enhance: 0,
+            brick: 0,
           },
           avatar: "default", // 장착한 아바타 ID
           unlockedAvatars: ["default"],

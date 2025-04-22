@@ -10,7 +10,13 @@ import {
   Text,
   Spinner,
   Center,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter, usePathname } from "next/navigation";
 import { auth } from "@/firebase";
 import { signOut } from "firebase/auth";
@@ -41,7 +47,6 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
-  // 로딩 중일 때 스피너 표시
   if (loading) {
     return (
       <Center h="100vh">
@@ -50,12 +55,10 @@ export default function Layout({ children }: LayoutProps) {
     );
   }
 
-  // 로그인하지 않은 경우 (로그인 페이지 제외)
   if (!user && pathname !== "/login") {
     return null;
   }
 
-  // 로그인 페이지인 경우 네비게이션 바 없이 컨텐츠만 표시
   if (pathname === "/login") {
     return (
       <Box minH="100vh" bg="#f5f6f8">
@@ -65,7 +68,7 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <Box minH="100vh" bg="#f5f6f8">
+    <Box minH="100vh" bg="#f5f6f8" overflowX="hidden" overflowY="auto">
       <Box
         as="nav"
         position="fixed"
@@ -100,72 +103,34 @@ export default function Layout({ children }: LayoutProps) {
               </Flex>
             </Link>
 
-            <Flex align="center" gap={3}>
-              <Link href="/ranking">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  color="gray.600"
-                  _hover={{ bg: "gray.50" }}
-                  leftIcon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  }
-                >
-                  랭킹
-                </Button>
-              </Link>
-
-              <Link href="/editname">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  color="gray.600"
-                  _hover={{ bg: "gray.50" }}
-                >
-                  닉네임 변경
-                </Button>
-              </Link>
-
-              <Link href="/avatar">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  color="gray.600"
-                  _hover={{ bg: "gray.50" }}
-                >
-                  아바타
-                </Button>
-              </Link>
-
-              <Button
-                size="sm"
-                variant="ghost"
-                color="gray.600"
-                _hover={{ bg: "gray.50" }}
-                onClick={handleSignOut}
-              >
-                로그아웃
-              </Button>
-            </Flex>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<HamburgerIcon />}
+                variant="outline"
+              />
+              <MenuList>
+                <MenuItem as={Link} href="/">
+                  🏠 홈
+                </MenuItem>
+                <MenuItem as={Link} href="/ranking">
+                  🏆 랭킹
+                </MenuItem>
+                <MenuItem as={Link} href="/profile">
+                  👤 프로필
+                </MenuItem>
+                <MenuItem as={Link} href="/avatar">
+                  👕 아바타
+                </MenuItem>
+                <MenuItem onClick={handleSignOut}>🔓 로그아웃</MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         </Container>
       </Box>
 
-      <Box as="main" pt="80px" pb={8}>
+      <Box as="main" pt="80px" pb={8} overflowX="hidden">
         <Container maxW="container.xl">{children}</Container>
       </Box>
     </Box>

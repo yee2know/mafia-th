@@ -34,7 +34,8 @@ export default function TaehyungEnhanceGame() {
       newScore +
       (1000 - snap.data()?.scores?.reactionTime || 0) +
       (snap.data()?.scores?.clicker || 0) +
-      (snap.data()?.scores?.killjennet || 0);
+      (snap.data()?.scores?.killjennet || 0) +
+      (snap.data()?.scores?.brick || 0);
     await updateDoc(userRef, {
       "scores.taehyung_enhance": newScore,
       level: Math.floor(totalscore / 100) + 1,
@@ -48,10 +49,10 @@ export default function TaehyungEnhanceGame() {
 
     const roll = Math.random();
 
-    if (roll < 0.78) {
+    if (roll < 0.8) {
       setLevel((lv) => lv + 1);
       setResultText(`${level + 1}레벨 강화 성공!`);
-    } else if (roll < 0.96) {
+    } else if (roll < 0.985) {
       const down = level > 1 ? level - 1 : 1;
       setLevel(down);
       setResultText("강화 실패! 레벨이 감소했습니다.");

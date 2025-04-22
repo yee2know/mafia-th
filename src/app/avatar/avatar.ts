@@ -56,6 +56,13 @@ export const avatarList = [
     conditionText: "김태형 강화하기 최종강화 성공",
   },
   {
+    id: "brick",
+    name: "벽돌 태형",
+    imageUrl: "/avatars/brick.png",
+    unlockLevel: 999,
+    conditionText: "김태형 벽돌깨기 1000점 이상",
+  },
+  {
     id: "special1",
     name: "우정",
     imageUrl: "/avatars/special1.png",
@@ -64,9 +71,9 @@ export const avatarList = [
   },
   {
     id: "special2",
-    name: "특별 아바타 2",
+    name: "잘때 몰래..",
     imageUrl: "/avatars/special2.png",
-    unlockLevel: 100,
+    unlockLevel: 9999,
     conditionText: "베타테스터 특전",
   },
 ];

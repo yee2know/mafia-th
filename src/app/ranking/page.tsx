@@ -22,7 +22,13 @@ import Layout from "../components/Layout";
 export default function RankingPage() {
   const router = useRouter();
   const [rankings, setRankings] = useState<
-    Array<{ name: string; score: number; level: number; avatar: string }>
+    Array<{
+      id: string;
+      name: string;
+      score: number;
+      level: number;
+      avatar: string;
+    }>
   >([]);
 
   useEffect(() => {
@@ -44,6 +50,7 @@ export default function RankingPage() {
       const querySnapshot = await getDocs(q);
 
       const rankingsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
         name: doc.data().userName,
         score: doc.data().score,
         level: doc.data().level,
@@ -100,7 +107,9 @@ export default function RankingPage() {
                         boxSize="32px"
                         borderRadius="full"
                       />
-                      <Text fontWeight="medium">{rank.name}</Text>
+                      <Link href={`/profile/${rank.id}`}>
+                        <Text fontWeight="bold">{rank.name}</Text>
+                      </Link>
                     </HStack>
                     <HStack spacing={4}>
                       <Badge colorScheme="green">Lv.{rank.level}</Badge>

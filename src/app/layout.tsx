@@ -5,7 +5,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "김태형 키우기",
+  title: "마피아 태형",
   description: "미니게임으로 레벨을 올리고 캐릭터를 수집하세요!",
 };
 
